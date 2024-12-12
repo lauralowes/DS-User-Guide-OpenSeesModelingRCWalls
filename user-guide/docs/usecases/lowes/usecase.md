@@ -2,7 +2,7 @@
 
 ## Seismic Response of Concrete Walls
 
-Modeling Reinforced Concrete Walls using Shell Elements in OpenSees and Using Jupyter to Post Process Results
+Modeling Reinforced Concrete Walls Using OpenSees Layered Shell Elements and Using Jupyter Notebooks to Create Input Files and Post Process Results
 
 ///
 
@@ -11,7 +11,7 @@ Modeling Reinforced Concrete Walls using Shell Elements in OpenSees and Using Ju
 
 *Key Words: OpenSees, Jupyter, HPC*
 
-The purpose of this use case is to be able to model, simulate, and post process multiple reinforced concrete walls at once. This use case uses jupyter notebooks to model these walls with shell elements and uses OpenSeesMP on DesignSafe to simulate the models. The documentation of this use case will use a single wall, RW1, as an example to understand the workflow and objectives of this use case. 
+The purpose of this use case is to facilitate OpenSees simulation and evaluation of simulation results for flexure-controlled reinforced concrete wall tests documented in [Shegay et al. (2021)](https://doi.org/10.17603/ds2-r12q-t415). Wall test specimen response to axial and cyclic lateral loading is simulated using a layered shell element as well as the plane stress concrete constitutive model developed by [Lu et al.](https://http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.html) and implemented for use in OpenSees and OpenSeesMP. A Jupyter notebook is provided that creates, for each wall specimen identified by the user, a tcl script that builds an OpenSees model of the wall test specimen to support OpenSees analysis to compute wall response for the axial load and lateral displacement histories applied in the laboratory. Additional Jupyter notebooks are provided that post-process OpenSees simulation data to provide measured and simulated load-displacement histories as well as movies of simulated stress fields and simulated crack patterns. This use case uses jupyter notebooks to model these walls with shell elements and uses OpenSeesMP on DesignSafe to simulate the models. The documentation of this use case will use a single wall, RW1, as an example to understand the workflow and objectives of this use case. 
 
 ### Resources
  
