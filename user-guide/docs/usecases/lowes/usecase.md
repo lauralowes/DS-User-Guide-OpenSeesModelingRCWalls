@@ -2,21 +2,21 @@
 
 ## Seismic Response of Concrete Walls
 
-Modeling Reinforced Concrete Walls Using OpenSees Layered Shell Elements and Using Jupyter Notebooks to Create Input Files and Post Process Results
+Modeling the Earthquake Response of Reinforced Concrete Walls Using OpenSees and Jupyter Notebooks
 
 ///
 
-**Josh Stokley - University of Washington**  <br>
+**Josh Stokley - Boeing Corporation**  <br>
 **Laura Lowes - University of Washington**  
 
 *Key Words: OpenSees, Jupyter, HPC*
 
-The purpose of this use case is to facilitate OpenSees simulation and evaluation of simulation results for flexure-controlled reinforced concrete wall tests documented in [Shegay et al. (2021)](https://doi.org/10.17603/ds2-r12q-t415). Wall test specimen response to axial and cyclic lateral loading is simulated using a layered shell element as well as the plane stress concrete constitutive model developed by [Lu et al.](https://http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.html) and implemented for use in OpenSees and OpenSeesMP. A Jupyter notebook is provided that creates, for each wall specimen identified by the user, a tcl script that builds an OpenSees model of the wall test specimen to support OpenSees analysis to compute wall response for the axial load and lateral displacement histories applied in the laboratory. Additional Jupyter notebooks are provided that post-process OpenSees simulation data to provide measured and simulated load-displacement histories as well as movies of simulated stress fields and simulated crack patterns. This use case uses jupyter notebooks to model these walls with shell elements and uses OpenSeesMP on DesignSafe to simulate the models. The documentation of this use case will use a single wall, RW1, as an example to understand the workflow and objectives of this use case. 
+The purpose of this use case is to facilitate OpenSees simulation and evaluation of simulation results for the flexure and flexure-shear controlled reinforced concrete wall tests documented in the [Shegay et al. (2021)](https://doi.org/10.17603/ds2-r12q-t415). Wall test specimen response to axial and cyclic lateral loading is simulated using a layered shell element as well as the plane stress concrete constitutive model developed and implemented for use in OpenSees and OpenSeesMP by [Lu et al.](https://http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.html). A Jupyter notebook is provided that creates, for each wall specimen identified by the user, a tcl script that builds an OpenSees model of the wall test specimen including boundary conditions to support OpenSees analysis to simulate wall response for the axial load and lateral displacement histories applied in the laboratory. Additional Jupyter notebooks are provided that post-process OpenSees simulation data to compare measured and simulated load-displacement histories as well as movies of simulated stress fields and simulated crack patterns. Results are provided below for planar wall specimen RW1 tested by Thomsen and Wallace [Thomsen and Wallace, 2004] to facilitate understand of the Jupyter notebook workflow and its products. 
 
 ### Resources
  
 #### Jupyter Notebooks
-The following Jupyter notebooks are available to facilitate the analysis of each case. They are described in details in this section. You can access and run them directly on DesignSafe by clicking on the "Open in DesignSafe" button.
+The following Jupyter notebooks are available to support model building for OpenSees and visualization of simualtion results. These notebooks are described in detail below. These notebooks can accessed and executed on DesignSafe by clicking on the "Open in DesignSafe" button.
 
 | Scope | Notebook |
 | :-------: | :---------:  |
@@ -28,41 +28,36 @@ The following Jupyter notebooks are available to facilitate the analysis of each
 | Crack Angle Viz | CrackedModel.ipynb <br> [![Open In DesignSafe](https://raw.githubusercontent.com/geoelements/LearnMPM/main/DesignSafe-Badge.svg)](https://jupyter.designsafe-ci.org/hub/user-redirect/lab/tree/CommunityData/Use%20Case%20Products/QUOFEM/CrackedModel.ipynb) |
 
 #### DesignSafe Resources
-The following DesignSafe resources were used in developing this use case.
+The following DesignSafe resources were used in this use case.
 
-* [Jupyter Notebook on DesignSafe](https://www.designsafe-ci.org/rw/workspace/#!/Jupyter::Analysis){:target="_blank"} <br/> 
-* [Simulation on DesignSafe - OpenSees](https://www.designsafe-ci.org/rw/workspace/#!/OpenSees::Simulation){:target="_blank"}  
+* [Jupyter Notebook on DesignSafe](https://www.designsafe-ci.org/rw/workspace/#!/Jupyter::Analysis) <br/> 
+* [Simulation on DesignSafe - OpenSees](https://www.designsafe-ci.org/rw/workspace/#!/OpenSees::Simulation)
 
 
 ### Background
 
 #### Citation and Licensing
 
-* Please cite [Shegay et al. (2021)](https://doi.org/10.17603/ds2-r12q-t415){:target="_blank"} to acknowledge the use of any data from this use case.
+* Please cite [Lowes LN and Stokley J (2023)](https://doi.org/10.1007/978-3-031-32511-3_69) to acknowledge the use of this use case.
 
-* Please cite [Lu XZ et al. (2015)](http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm){:target="_blank"} to acknowledge the use of the modeling strategy from this use case.
+* Please cite [Shegay et al. (2021)](https://doi.org/10.17603/ds2-r12q-t415) to acknowledge the use of wall test data included in this use case.
 
-* Please cite [Rathje et al. (2017)](https://doi.org/10.1061/(ASCE)NH.1527-6996.0000246){:target="_blank"} to acknowledge the use of DesignSafe resources.  
+* Please cite [Lu XZ et al. (2015)](http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm) to acknowledge the use of the OpenSees wall models employed in this use case.
+  
+* Please cite [McKenna F et al. (2010)](https://doi.org/10.1061/(ASCE)CP.1943-5487.0000002) to acknowledge the use of OpenSees platform in this use case.
 
-* This software is distributed under the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.html){:target="_blank"} .  
+* Please cite [Rathje et al. (2017)](https://doi.org/10.1061/(ASCE)NH.1527-6996.0000246) to acknowledge the use of DesignSafe resources.  
+
+* This software is distributed under the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.html).  
 
 ### Description
 #### Data  
 
-The walls that are modeled are defined in a database provided by Alex Shegay. The database is a MATLAB variable of type 'structure'. The tree-like structure of the variable consists of several levels. Each level consists of several variables, each being a 1x142 dimension array. Each entry within the array corresponds to a separate wall specimen. The order of these entries is consistent throughout the database and reflects the order of walls as appearing in the 'UniqueID' array.  
+The data characterizing the RC wall tests used in this use case were assembled and archived in the DesignSafe Data Depot by [Shegay et al. (2021)](https://doi.org/10.17603/ds2-r12q-t415). These data are provided as a MATLAB 'structure' datatype named "WallData.mat". WallData.mat characterizes 142 walls tests; a subset of these tests were considered in the use case. WallData.mat has a tree-like structure and comprises several top levels, each of which comprises multiple variables with some "variables" comprising multiple sub-levels. In most cases, each entity within the data structures is 1x142 dimension array, with data ordered within the array consistently throughout the database based on the order of wall test specimens in the 'UniqueID' variable included in WallData.mat. In a few cases, which are utilized in this use case, arrays embedded within the data structure included a subset of the 142 "UniqueIDs" and associated data.     
 
 #### Modeling
 
-The modeling techniques are inspired by the work of Lu XZ.
-The modeling of these walls make use of the MITC4 shell element. This element smears concrete and steel in multiple layers through the thickness of the element. Figure 1 demonstrates this.  Within the shell element, only the transverse steel is smeared with the concrete. The shell elements are modeled to be square or close to square for best accuracy, an assumption that follows this is that cover concrete on the ends of the wall are not taken into account as it would produce skinny elements that would cause the wall to fail prematurely. The vertical steel bars are modeled as trusses up the wall to better simulate the stress of those bars.  The opensees material models that are used are:  
-
-* PlaneStressUserMaterial- Utilizes damage mechanisms and smeared crack model to define a multi-dimensional concrete model  
-    * Variables include: compressive strength, tensile strength, crushing strength, strain at maximum and crushing strengths, ultimate tensile strain, and shear retention factor
-    * Model can be found in Lu XZs citation  
-   
-* Steel02- Uniaxial steel material model with isotropic strain hardening
-    * Variables include: yield strength, initial elastic tangent, and strain hardening ratio
-    * Model can be found here: [Steel02 OpenSees](https://opensees.berkeley.edu/wiki/index.php/Steel02_Material_--_Giuffr%C3%A9-Menegotto-Pinto_Model_with_Isotropic_Strain_Hardening){:target="_blank"} 
+In this use case, walls are modeled using the OpenSees [ShellDKGQ element] (http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm); however, the [MITC4 shell element] (https://opensees.berkeley.edu/wiki/index.php/Shell_Element) could also be used. The Opensees [MembranePlateFiberSection](https://opensees.github.io/OpenSeesDocumentation/user/manual/section/LayeredMembraneSection.html) is used to create a shell section comprising confined and unconfined concrete and transverse reinforcing steel; the volume of the discrete transverse steel bars within the perimeter of the element is represented by the volume of a single steel layer within the layered shell element. This is illustrated in Figure 1. Vertical reinforcing steel is modeled using discrete truss elements and the [Steel02 material model](https://opensees.berkeley.edu/wiki/index.php/Steel02_Material_--_Giuffr%C3%A9-Menegotto-Pinto_Model_with_Isotropic_Strain_Hardening) For each wall specimen, a mesh was constructed with nodes located horizontally to exactly represent vertical bar locations and vertically to create elements with vertical-to-horizontal aspect ratios as close to 1.0 as possible. To accomplish this objective as well as ensure that the number of elements in the model did not result in excessive computational demand, cover concrete at the horizontal ends of the wall was ignored. 
 
 ![SchematicView](img/ShellEle.JPG)  
 Figure 1: Smeared shell element representation  
