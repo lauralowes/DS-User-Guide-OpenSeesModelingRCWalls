@@ -57,9 +57,7 @@ The data characterizing the RC wall tests used in this use case were assembled a
 
 #### Modeling
 
-In this use case, walls are modeled using the OpenSees [ShellDKGQ element](http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm); however, the [MITC4 shell element](https://opensees.berkeley.edu/wiki/index.php/Shell_Element) could also be used. The Opensees [MembranePlateFiberSection](https://opensees.github.io/OpenSeesDocumentation/user/manual/section/LayeredMembraneSection.html) is used to create a shell section comprising confined and unconfined concrete and transverse reinforcing steel; the volume of the discrete transverse steel bars within the perimeter of the element is represented by the volume of a single steel layer within the layered shell element. This is illustrated in Figure 1. Vertical reinforcing steel is modeled using discrete truss elements and the [Steel02 material model](https://opensees.berkeley.edu/wiki/index.php/Steel02_Material_--_Giuffr%C3%A9-Menegotto-Pinto_Model_with_Isotropic_Strain_Hardening) For each wall specimen, a mesh was constructed with nodes located horizontally to exactly represent vertical bar locations and vertically to create elements with vertical-to-horizontal aspect ratios as close to 1.0 as possible. To accomplish this objective as well as ensure that the number of elements in the model did not result in excessive computational demand, cover concrete at the horizontal ends of the wall was ignored. 
-
-![Multi-layer-shell-element](https://github.com/user-attachments/assets/8fdc7ec8-5fa1-4efd-9a3c-845cd32f9104)
+In this use case, walls are modeled using the OpenSees 3.3.0 and the [ShellDKGQ element](http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm) available in OpenSees; however, the [MITC4 shell element](https://opensees.berkeley.edu/wiki/index.php/Shell_Element) could also be used. The Opensees [MembranePlateFiberSection](https://opensees.github.io/OpenSeesDocumentation/user/manual/section/LayeredMembraneSection.html) is used to create a shell section comprising confined and unconfined concrete and transverse reinforcing steel; the volume of the discrete transverse steel bars within the perimeter of the element is represented by the volume of a single steel layer within the layered shell element. This is illustrated in Figure 1. Two-dimensional concrete material response is modeled using the [nDmaterial PlanStressUserMaterial](http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm) developed by [(Lu XZ et al., 2015)]. Vertical reinforcing steel is modeled using discrete truss elements and the [Steel02 material model](https://opensees.berkeley.edu/wiki/index.php/Steel02_Material_--_Giuffr%C3%A9-Menegotto-Pinto_Model_with_Isotropic_Strain_Hardening) For each wall specimen, a mesh was constructed with nodes located horizontally to exactly represent vertical bar locations and vertically to create elements with vertical-to-horizontal aspect ratios as close to 1.0 as possible. To accomplish this objective as well as ensure that the number of elements in the model did not result in excessive computational demand, cover concrete at the horizontal ends of the wall was ignored. 
 
 Figure 1: Layered Shell Element Comprising Smeared Transverse Reinforcing Steel and Confined and Unconfined Concrete [(Lu XZ et al., 2015)](http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm)  
 
@@ -81,31 +79,27 @@ The jupyter notebook that creates the OpenSees input file can be found here: {:t
 
 #### Reinforced Concrete Wall Database   
 
-Each wall in the database is assigned a unique ID number. This number is the single input to the modeling script to create the script. The use case will loop through multiple numbers to create multiple files at once and run them through opensees. Variables are separated in the database by sections. For example, under the section 'Geometry', one can find the heights of the walls, the thickness of walls, the aspect ratios, and so on. By parsing through these sections, the necessary information can found and imported into the modeling script to build out the wall.
-
-Wall test specimen RW1 is wall 33 in the database. Using this index value as input, the provided scripts pull all of the data from the WallData.mat file that are required to create an OpenSees simulation of the laboratory test of wall RW1.  
+Each wall in the database is assigned a unique ID number. This number is the single input to the modeling scripts required to create OpenSees input files. The provided Jupyter notebooks loop through multiple ID numbers to create input files for each wall test specified by the user. Files for each test specimen are created and stored in subfolders identified by the unquie ID created by [Shegay et al. (2021)](https://doi.org/10.17603/ds2-r12q-t415) and assigned to each wall specimen. Wall test specimen RW1 is wall number 33 in the database. Using this ID / index value as input, the provided scripts pull all of the data from the WallData.mat file that are required to create an OpenSees model and conduct and OpenSees simulation of the laboratory test of wall RW1. 
 
 #### Modeling Script  
 
 The sections of the modeling script are:  
 ##### Section 1: Initialization of the model
-   * The degrees of freedom and the variables that carry uncertainty are defined.  
+   * The degrees of freedom and variables that carry uncertainty are defined.  
   
 ##### Section 2: Defines nodal locations and elements 
    * Nodes are placed at the locations of the vertical bars along the length of the wall.
-   * If the ratio of the length of the wall to the number of elements is too coarse of a mesh, additional nodes are placed in between the bars.
-   * The height of each element is equal to the length of the nodes in the boundary to create square elements up the wall.  
+   * If the ratio of the length of the wall to the number of elements resulted in a overly coarse mesh, additional nodes were placed between the bars.
+   * The height of each element is equal to the distance between horizontal nodes in the boundary element to create approximately square elements throughout the wall.  
   
 ##### Section 3: Defines material models and their variables
-   * The crushing energy and fracture energy are calculated and wrote to the .tcl file. The equations for these values come from ([Nasser et al. (2019)](https://ascelibrary.org/doi/pdf/10.1061/%28ASCE%29ST.1943-541X.0002311){:target="_blank"} ) Below is the code: 
-
+   * Concrete crushing energy and fracture energy are calculated and written to the input file. Unconfined and confined concrete compressive crushing energy are defined using the recommendations provided by ([Nasser et al. (2019)](https://ascelibrary.org/doi/pdf/10.1061/%28ASCE%29ST.1943-541X.0002311)); concrete fracture energy is defined per [Martin et al. 2007](https://doi.org/10.14359/18961)
 ```py
 self.gtcc = abs((0.174*(.5)**2-0.0727*.5+0.149)*((self.Walldata[40]*1000*conMult)/1450)**0.7) #tensile energy of confined
 self.gtuc = abs((0.174*(.5)**2-0.0727*.5+0.149)*((self.Walldata[40]*1000)/1450)**0.7) # tensile energy of unconfined
 self.gfuc = 2*self.Walldata[40]*6.89476*5.71015 #crushing energy of unconfined
 self.gfcc = 2.2*self.gfuc #crushing energy of confined
 ```
-
    * The crushing strain (epscu) and fracture strain (epstu) can then be calculated from the energy values.
    * The material models are then defined.
    * The concrete material opensees model: nDmaterial PlaneStressUserMaterial $matTag 40 7 $fc $ft $fcu $epsc0 $epscu $epstu $stc.
