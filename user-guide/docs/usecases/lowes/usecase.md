@@ -59,7 +59,7 @@ The data characterizing the RC wall tests used in this use case were assembled a
 
 In this use case, walls are modeled using the OpenSees [ShellDKGQ element](http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm); however, the [MITC4 shell element](https://opensees.berkeley.edu/wiki/index.php/Shell_Element) could also be used. The Opensees [MembranePlateFiberSection](https://opensees.github.io/OpenSeesDocumentation/user/manual/section/LayeredMembraneSection.html) is used to create a shell section comprising confined and unconfined concrete and transverse reinforcing steel; the volume of the discrete transverse steel bars within the perimeter of the element is represented by the volume of a single steel layer within the layered shell element. This is illustrated in Figure 1. Vertical reinforcing steel is modeled using discrete truss elements and the [Steel02 material model](https://opensees.berkeley.edu/wiki/index.php/Steel02_Material_--_Giuffr%C3%A9-Menegotto-Pinto_Model_with_Isotropic_Strain_Hardening) For each wall specimen, a mesh was constructed with nodes located horizontally to exactly represent vertical bar locations and vertically to create elements with vertical-to-horizontal aspect ratios as close to 1.0 as possible. To accomplish this objective as well as ensure that the number of elements in the model did not result in excessive computational demand, cover concrete at the horizontal ends of the wall was ignored. 
 
-![SchematicView](img/ShellEle.JPG)  
+![Multi-layer-shell-element](https://github.com/user-attachments/assets/8fdc7ec8-5fa1-4efd-9a3c-845cd32f9104)
 Figure 1: Smeared shell element representation  
 
 ### Example 
