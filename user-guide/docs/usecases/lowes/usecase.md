@@ -65,26 +65,25 @@ Figure 1: Layered Shell Element Comprising Smeared Transverse Reinforcing Steel 
 
 ### Example 
 
-RW1 is modeled from the database to produce a tcl file that represents the geometry, material, and simulation history of the wall. The wall is 150 inches high, 46.37 inches long, and 4 inches thick. It consists of 1292 amount of nodes, 1200 amount of shell elements, and 900 amount of steel truss elements. MITC4 shell elements are used to smear the concrete and transverse steel into the thickness while the vertical reinforce bars are modeled as truss elements. RW1 had a compression buckling failure mode in the lab. More information on RW1 and its experimental results can be found here: [Wallace et al. (2004)](https://ascelibrary.org/doi/10.1061/%28ASCE%290733-9445%282004%29130%3A4%28618%29#:~:text=Application%20of%20displacement%2Dbased%20design,for%20a%20given%20top%20displacement.){:target="_blank"} 
+Wall specimen RW1 [Wallace et al. (2004)](https://ascelibrary.org/doi/10.1061/%28ASCE%290733-9445%282004%29130%3A4%28618%29#:~:text=Application%20of%20displacement%2Dbased%20design,for%20a%20given%20top%20displacement.) is used to demonstrate application of the use case files. Wall test specimen RW1 was 150 in. tall, by 46.4 in. long, by 4.0 in. thick (3810 mm x 1180 mm x 101.6 mm) and was modeled using a mesh comprising 1200 MITC4 shell elements and 1200 steel truss elements. In the laboratory, RW1 exhibited a compression-buckling failure, with strength loss resulting from simultaneous concrete crushing and buckling of vertical reinforcement in the extreme compression fibers at the base of the wall. 
 
-The use case workflow involves the following steps:
+The example use case workflow comprises the following steps
 
-* Using Jupyter notebook modeling script to create input file for OpenSees
-* Running input file through HPC on DesignSafe
-* Using Jupyter notebook post processing scripts to evaluate model
+* Use Matlab-to-Python and Tcl-Script Creator notebooks to create an "input" file for OpenSees.
+* Execute an OpenSees analysis using the input file, OpenSees version  and DesignSafe computing resources. 
+* Use the postprocessing Jupyter notebooks to visualize analysis results and evaluate the model.
 
+### Create and OpenSees Input File Using the Provided Notebooks
 
-### Create Input File using Modeling Script
-
-The modeling script is broken up into 2 notebooks, the first notebook imports the variables to build the wall into an array. The second notebook builds out the tcl file that will be ran through openseees. The sections defined below are from the second notebook.  
-The matlab to python script can be found here: [Matlab_to_Python.ipynb](https://jupyter.designsafe-ci.org/hub/user-redirect/lab/tree/CommunityData/Use%20Case%20Products/QUOFEM/Matlab_to_Python.ipynb){:target="_blank"} 
-The jupyter notebook that creates the OpenSees input file can be found here: [TCL_Script_Creator.ipynb](https://jupyter.designsafe-ci.org/hub/user-redirect/lab/tree/CommunityData/Use%20Case%20Products/QUOFEM/TCL_Script_Creator.ipynb){:target="_blank"} 
+Creation of an OpenSees model (or models) requires used of two notebooks. The matlab-to-Python script [Matlab_to_Python.ipynb](https://jupyter.designsafe-ci.org/hub/user-redirect/lab/tree/CommunityData/Use%20Case%20Products/QUOFEM/Matlab_to_Python.ipynb) imports the variables defining the materials, geometry and load history for the wall test specimens and creats a data array. The [TCL_Script_Creator.ipynb](https://jupyter.designsafe-ci.org/hub/user-redirect/lab/tree/CommunityData/Use%20Case%20Products/QUOFEM/TCL_Script_Creator.ipynb) creates the tcl file that builds the model, defines boundary condistions and displacement history, defines output quantities, and exectures the OpenSees analysis (see below)
+The matlab to python script can be found here: {:target="_blank"} 
+The jupyter notebook that creates the OpenSees input file can be found here: {:target="_blank"} 
 
 #### Reinforced Concrete Wall Database   
 
-Each wall in the database has a number corresponding to its unique ID. This number will be the single input to the modeling script to create the script. The use case will loop through multiple numbers to create multiple files at once and run them through opensees. Variables are separated in the database by sections. For example, under the section 'Geometry', one can find the heights of the walls, the thickness of walls, the aspect ratios, and so on. By parsing through these sections, the necessary information can found and imported into the modeling script to build out the wall.
+Each wall in the database is assigned a unique ID number. This number is the single input to the modeling script to create the script. The use case will loop through multiple numbers to create multiple files at once and run them through opensees. Variables are separated in the database by sections. For example, under the section 'Geometry', one can find the heights of the walls, the thickness of walls, the aspect ratios, and so on. By parsing through these sections, the necessary information can found and imported into the modeling script to build out the wall.
 
-RW1 [Thomsen and Wallace, 2004 (Thomsen and Wallace, 2004) is wall 33 in the database (with the first wall index starting at 0) and using that index number, the modeling script can grab everything that defines RW1.  
+Wall test specimen RW1 is wall 33 in the database. Using this index value as input, the provided scripts pull all of the data from the WallData.mat file that are required to create an OpenSees simulation of the laboratory test of wall RW1.  
 
 #### Modeling Script  
 
