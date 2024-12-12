@@ -60,7 +60,8 @@ The data characterizing the RC wall tests used in this use case were assembled a
 In this use case, walls are modeled using the OpenSees [ShellDKGQ element](http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm); however, the [MITC4 shell element](https://opensees.berkeley.edu/wiki/index.php/Shell_Element) could also be used. The Opensees [MembranePlateFiberSection](https://opensees.github.io/OpenSeesDocumentation/user/manual/section/LayeredMembraneSection.html) is used to create a shell section comprising confined and unconfined concrete and transverse reinforcing steel; the volume of the discrete transverse steel bars within the perimeter of the element is represented by the volume of a single steel layer within the layered shell element. This is illustrated in Figure 1. Vertical reinforcing steel is modeled using discrete truss elements and the [Steel02 material model](https://opensees.berkeley.edu/wiki/index.php/Steel02_Material_--_Giuffr%C3%A9-Menegotto-Pinto_Model_with_Isotropic_Strain_Hardening) For each wall specimen, a mesh was constructed with nodes located horizontally to exactly represent vertical bar locations and vertically to create elements with vertical-to-horizontal aspect ratios as close to 1.0 as possible. To accomplish this objective as well as ensure that the number of elements in the model did not result in excessive computational demand, cover concrete at the horizontal ends of the wall was ignored. 
 
 ![Multi-layer-shell-element](https://github.com/user-attachments/assets/8fdc7ec8-5fa1-4efd-9a3c-845cd32f9104)
-Figure 1: Smeared shell element representation  
+
+Figure 1: Layered Shell Element Comprising Smeared Transverse Reinforcing Steel and Confined and Unconfined Concrete [(Lu XZ et al., 2015)](http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm)  
 
 ### Example 
 
@@ -83,7 +84,7 @@ The jupyter notebook that creates the OpenSees input file can be found here: [TC
 
 Each wall in the database has a number corresponding to its unique ID. This number will be the single input to the modeling script to create the script. The use case will loop through multiple numbers to create multiple files at once and run them through opensees. Variables are separated in the database by sections. For example, under the section 'Geometry', one can find the heights of the walls, the thickness of walls, the aspect ratios, and so on. By parsing through these sections, the necessary information can found and imported into the modeling script to build out the wall.
 
-RW1 is wall 33 in the database (with the first wall index starting at 0) and using that index number, the modeling script can grab everything that defines RW1.  
+RW1 [Thomsen and Wallace, 2004 (Thomsen and Wallace, 2004) is wall 33 in the database (with the first wall index starting at 0) and using that index number, the modeling script can grab everything that defines RW1.  
 
 #### Modeling Script  
 
