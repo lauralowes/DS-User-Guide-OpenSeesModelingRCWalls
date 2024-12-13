@@ -93,26 +93,32 @@ The sections of the modeling script are:
    * The height of each element is equal to the distance between horizontal nodes in the boundary element to create approximately square elements throughout the wall.  
   
 ##### Section 3: Defines material models and their variables
-   * Concrete crushing energy and fracture energy are calculated and written to the input file. Unconfined and confined concrete compressive crushing energy are defined using the recommendations provided by ([Nasser et al. (2019)](https://ascelibrary.org/doi/pdf/10.1061/%28ASCE%29ST.1943-541X.0002311)); concrete fracture energy is defined per [Martin et al. 2007](https://doi.org/10.14359/18961)
+   * Concrete crushing energy and fracture energy are calculated and written to the input file. Unconfined and confined concrete compressive crushing energy are defined using the recommendations provided by [Nasser et al. (2019)](https://ascelibrary.org/doi/pdf/10.1061/%28ASCE%29ST.1943-541X.0002311); concrete fracture energy is defined per Comité Euro-International du Béton (1990) (Note that self.Walldata[40] represents concrete compressive strength in ksi and a maximum aggregate size of 0.5 in. is assumed): 
 ```py
 self.gtcc = abs((0.174*(.5)**2-0.0727*.5+0.149)*((self.Walldata[40]*1000*conMult)/1450)**0.7) #tensile energy of confined
 self.gtuc = abs((0.174*(.5)**2-0.0727*.5+0.149)*((self.Walldata[40]*1000)/1450)**0.7) # tensile energy of unconfined
 self.gfuc = 2*self.Walldata[40]*6.89476*5.71015 #crushing energy of unconfined
 self.gfcc = 2.2*self.gfuc #crushing energy of confined
 ```
-   * The crushing strain (epscu) and fracture strain (epstu) can then be calculated from the energy values.
-   * The material models are then defined.
-   * The concrete material opensees model: nDmaterial PlaneStressUserMaterial $matTag 40 7 $fc $ft $fcu $epsc0 $epscu $epstu $stc.
-      * 'fc' is the compressive strength, 'ft' is the tensile strength, 'fcu' is the crushing strength, and 'epsc0' is the strain at the compressive strength.
-   * The steel material opensees model: uniaxialMaterial Steel02 $matTag $Fy $E $b $R0 $cR1 $cR2.
-      * 'Fy' is the yield strength, 'E' is the youngs modulus, 'b' is the strain hardening ratio, and 'R0', 'cR1', and 'cR2' are parameters to control transitions from elastic to plastic branches.
-   * minMax wrappers are applied to the steel so that if the steel strain compresses more than the crushing strain of the concrete or exceeds the ultimate strain of the steel multiplied by the steel rupture ratio, the stress will go to 0.  
+   * Concrete crushing strain (epscu) and fracture strain (epstu) representing the strain at which concrete strength diminishes to residual capacity are calculated using strengths, energy values and assumed residual capacities.
+   * The material models are defined as follows:
+      * The concrete material opensees model: nDmaterial PlaneStressUserMaterial $matTag 40 7 $fc $ft $fcu $epsc0 $epscu $epstu $stc, where
+         * 'fc' is the compressive strength,
+         * 'ft' is the tensile strength,
+         * 'fcu' is the crushing strength, and
+         * 'epsc0' is the strain at the compressive strength.
+      * The steel material opensees model: uniaxialMaterial Steel02 $matTag $Fy $E $b $R0 $cR1 $cR2, where
+         * 'Fy' is the yield strength,
+         * 'E' is the youngs modulus,
+         * 'b' is the strain hardening ratio, and
+         * 'R0', 'cR1', and 'cR2' are parameters to control transitions from elastic to plastic branches.
+      * minMax wrappers are applied to the steel so that if the steel strain compresses more than the crushing strain of the concrete or exceeds the ultimate strain of the steel multiplied by the steel rupture ratio, the stress will go to 0.  
   
-##### Section 4: Defines the continuum shell model
-   * The shell element is split up into multiple layers of the cover concrete, transverse steel, and core concrete.
+##### Section 4: Defines the continuum layered shell element model
+   * The layered shell element comprises two cover concrete layers, two transverse steel layers, and one core concrete layer.
    * The cover concrete thickness is defined in the database, the transverse steel thickness is calculated as:
       * total layers of transverse steel multiplied by the area of the steel divided by the height of the wall.
-   * The total thickness of the wall is defined in the database so after the cover concrete and steel thicknesses are subtracted, the core concrete takes up the rest.
+   * Core concrete thickness is defined as the total wall thickness less the thickness of the cover concrete and transverse steel.
   
 ##### Section 5: Defines the elements
    * The shell element opensees model is: element ShellMITC4 $eleTag $iNode $jNode $kNode $lNode $secTag
